@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_CALLS 100
+
+typedef struct {
+  char name[50];
+  char phone[15];
+  char date[15];
+  int customer_id;
+} Customer;
+
+Customer call_queue[MAX_CALLS];
+int front = 0, rear = -1, count = 0;
+
+void enqueue(Customer customer) {
+  if (count == MAX_CALLS) {
+    printf("Queue is full.\n");
+    return;
+  }
+  rear = (rear + 1) % MAX_CALLS;
+  call_queue[rear] = customer;
+  count++;
+}
+
+Customer dequeue() {
+  if (count == 0) {
+    printf("Queue is empty.\n");
+    return;
+  }
+  Customer customer = call_queue[front];
+  front = (front + 1) % MAX_CALLS;
+  count--;
+  return customer;
+}
+
+void display_queue() {
+  if (count == 0) {
+    printf("Queue is empty.\n");
+    return;
+  }
+  for (int i = front; i <= rear; i++) {
+    printf("Name: %s\n", call_queue[i].name);
+    printf("Phone: %s\n", call_queue[i].phone);
+    printf("Date: %s\n", call_queue[i].date);
+    printf("Customer ID: %d\n", call_queue[i].customer_id);
+  }
+}
+
+int main() {
+  int choice;
+  Customer customer;
+  while (1) {
+    printf("1. Add call to queue\n");
+    printf("2. Answer call\n");
+    printf("3. Display queue\n");
+    printf("4. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    switch (choice) {
+      case 1:
+        printf("Enter customer name: ");
+        scanf("%s", customer.name);
+        printf("Enter customer phone number: ");
+        scanf("%s", customer.phone);
+        printf("Enter date of call: ");
+        scanf("%s", customer.date);
+        printf("Enter customer ID: ");
+        scanf("%d", &customer.customer_id);
+        enqueue(customer);
+        break;
+      case 2:
+        customer = dequeue();
+        printf("Answering call from customer %s...\n", customer.name);
+        break;
+      case 3:
+        display_queue();
+        break;
+      case 4:
+        exit(0);
+    }
+  }
+  return 0;
+}
