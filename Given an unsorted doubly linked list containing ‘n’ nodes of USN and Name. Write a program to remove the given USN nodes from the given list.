@@ -1,0 +1,125 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct node
+{
+    char name[20];
+    char usn[20];
+	struct node *next;
+};
+
+typedef struct node *NODE;
+
+NODE getnode()
+{
+	NODE temp;
+	temp=(NODE)malloc(sizeof(struct node));
+	if (temp==NULL)
+	{
+		printf("Memory not allocated\n");
+		return NULL;
+	}
+	return temp;
+}
+
+NODE insert_beg(char*name,char*usn,NODE first)
+{
+	NODE new;
+	new=getnode();
+	strcpy(new->name,name);
+	strcpy(new->usn,usn);
+	new->next=NULL;
+	if(first==NULL)
+	{
+		return new;
+	}
+	else
+	{
+		new->next=first;
+		first=new;
+		return first;
+	}
+}
+
+NODE delete_specific_value(NODE first,char*usn)
+{
+    NODE prev,curr;
+    if(first==NULL)
+    {
+        printf("Cannot delete\n");
+        return NULL;
+    }
+    curr=first;
+    if(strcmp(curr->usn,usn)==0)
+    {
+        printf("Item deleted=%s",curr->usn);
+        first=first->next;
+        free(curr);
+        return first;
+    }
+    prev=NULL;
+    curr=first;
+    while(strcmp(curr->usn,usn)!=0 && curr!=NULL)
+    {
+        prev=curr;
+        curr=curr->next;
+    }
+    if(strcmp(curr->usn,usn)==0)
+    {
+        prev->next=curr->next;
+        printf("%s=Item deleted",curr->usn);
+        free(curr);
+        return first;
+    }
+    if(curr==NULL)
+    {
+        printf("End of list reached and item not found\n");
+        return first;
+    }
+}
+
+void display(NODE first)
+{
+	NODE temp;
+	temp=first;
+	while(temp!=NULL)
+	{
+		printf("value stored in node=%s\n",temp->usn);
+		temp=temp->next;
+	}
+}
+
+void main()
+{
+	NODE first=NULL;
+	int choice;
+	char name[20],usn[20];
+	while(1)
+	{
+		printf("\n1.Insert_beg  \n2.delete_specific_value \n3.Display\n");
+		printf("\n enter your choice\n");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:printf("\nEnter the value to be inserted at the begining\n");
+			       scanf("%s%s",name,usn);
+			       first=insert_beg(name,usn,first);
+			       break;
+                   
+            case 2:printf("\nEnter the value to be deleted\n");
+			       scanf("%s",usn);
+			       first=delete_specific_value(first,usn);
+			       break;
+			        
+			case 3:display(first);
+			       break;
+			         
+		    default:exit(0);
+			        
+		}
+		
+	}
+}
+
