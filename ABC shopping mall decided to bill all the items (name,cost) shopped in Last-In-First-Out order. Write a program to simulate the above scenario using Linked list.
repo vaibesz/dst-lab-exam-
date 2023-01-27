@@ -1,0 +1,79 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct node{
+    char name[20];
+    float cost;
+    struct node*next;
+};
+typedef struct node *NODE;
+
+NODE createnode(char *name,float cost){
+    NODE temp;
+    temp=(NODE)malloc(sizeof(NODE));
+    if(temp==NULL){
+        printf("Memory not allocated");
+    }
+    strcpy(temp->name,name);
+    temp->cost=cost;
+    temp->next=NULL;
+    return temp;
+}
+
+NODE insert_at_beg(NODE first,char *name,float cost){
+    NODE new;
+    new=createnode(name,cost);
+    if(first==NULL){
+        return new;
+    }
+    new->next=first;
+    return new;
+}
+
+NODE delete_at_beg(NODE first){
+    NODE temp=first;
+    if(first==NULL){
+        printf("there is no list to delete\n");
+        return NULL;
+    }
+    if(first->next==NULL){
+        free(temp);
+        return NULL;
+    }
+    printf("item deleted = %s",first->name);
+    first=temp->next;
+    free(temp);
+    return first;
+}
+
+void display(NODE first){
+    NODE temp=first;
+    while(temp!=NULL){
+        printf("Item=%s\n",temp->name);
+        temp=temp->next;
+    }
+}
+
+int main (){
+    NODE first=NULL;
+    char name[20];
+    float cost;
+    int choice;
+    while(1){
+        printf("ENTER THE CHOICE 1. PUSH 2. POP 3. DISPLAY\n");
+        scanf("%d",&choice);
+        switch(choice){
+            case 1: printf("enter the name and cost\n");
+            scanf("%s%f",name,&cost);
+            first=insert_at_beg(first,name,cost);
+            break;
+            case 2: first= delete_at_beg(first);
+            break;
+            case 3: display(first);
+            break;
+            default: exit(0);
+        }
+    }
+    return 0;
+}
